@@ -1,4 +1,6 @@
 import http.configuration.*;
+import http.request.*;
+
 import java.net.*;
 import java.io.*;
 
@@ -9,15 +11,25 @@ public class WebServer {
         HttpdConf config = new HttpdConf("conf/httpd.conf");
         MimeTypes mimes = new MimeTypes("conf/mime.types");
         ServerSocket socket = new ServerSocket(config.getPort());
+        System.out.println("Listening at port " + config.getPort());
 
         while (true) {
             Socket client = socket.accept();
-            //Worker workerThread = new Worker(client, config, mimes);
-            outputRequest( client );
-            client.close();
+            if (client != null) {
+                Request req = new Request(client);
+
+                System.out.println( "-------------------------" );
+                System.out.println("Method: " + req.getVerb());
+                System.out.println("Uri: " + req.getUri());
+                System.out.println("HTTP Version: " + req.getHttpVersion());
+                System.out.println("Header: " + req.getHeaders());
+                System.out.println( "-------------------------" );
+                client.close();
+            }
         }
     }
 
+    /*
     protected static void outputRequest( Socket client ) throws IOException {
         String line;
 
@@ -36,5 +48,6 @@ public class WebServer {
         }
         System.out.println( "-------------------------" );
     }
+    */
 
 }
