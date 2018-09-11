@@ -33,7 +33,7 @@ public class Request {
         {
             BufferedReader requestReader = new BufferedReader(new InputStreamReader(Client.getInputStream()));
 
-            while((line = requestReader.readLine()) != null)
+            while(!(line = requestReader.readLine()).equals(""))
             {
                 if (!body)
                 {
