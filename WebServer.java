@@ -1,4 +1,4 @@
-import http.configuration.HttpdConf;
+import http.configuration.*;
 import java.net.*;
 import java.io.*;
 
@@ -8,6 +8,7 @@ public class WebServer {
 
         HttpdConf config = new HttpdConf("/Users/rohan/csc-667/web-server-rohan-and-jake/conf/httpd.conf");
         //MimeTypes mimes = new MimeTypes("/Users/rohan/csc-667/web-server-rohan-and-jake/conf/httpd.conf");
+        MimeTypes mimes = new MimeTypes("conf/mime.types");
         ServerSocket socket = new ServerSocket(config.getPort());
 
         while (true) {
