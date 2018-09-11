@@ -6,8 +6,7 @@ public class WebServer {
 
     public static void main(String[] args) throws IOException {
 
-        HttpdConf config = new HttpdConf("/Users/rohan/csc-667/web-server-rohan-and-jake/conf/httpd.conf");
-        //MimeTypes mimes = new MimeTypes("/Users/rohan/csc-667/web-server-rohan-and-jake/conf/httpd.conf");
+        HttpdConf config = new HttpdConf("conf/httpd.conf");
         MimeTypes mimes = new MimeTypes("conf/mime.types");
         ServerSocket socket = new ServerSocket(config.getPort());
 
