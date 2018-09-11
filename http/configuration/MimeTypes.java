@@ -2,14 +2,15 @@ package http.configuration;
 
 import java.util.HashMap; 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.StringTokenizer;
 import java.util.ArrayList;
 
 public class MimeTypes {
-    HashMap<String, String> Dictionary; 
-    String FileName;
+    private HashMap<String, String> Dictionary; 
+    private String FileName;
     
     public MimeTypes(String fileName)
     {
@@ -18,7 +19,7 @@ public class MimeTypes {
         this.load();
     }
     
-    public void load()
+    private void load()
     {
         String line;
         StringTokenizer tokenizer;
@@ -48,7 +49,7 @@ public class MimeTypes {
         }
         catch(IOException e)
         {
-            System.out.println("Error reading mime.TYPES: " + e);
+            System.out.println("Error reading mime.TYPES:   " + e);
         } 
     }
     
