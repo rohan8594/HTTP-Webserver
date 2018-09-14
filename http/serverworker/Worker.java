@@ -18,7 +18,21 @@ public class Worker extends Thread {
         this.mimes = mimes;
     }
 
-    public void run() throws IOException {
+    @Override
+    public void run() {
+        try {
+            Request req = new Request(client);
 
+            System.out.println( "-------------------------" );
+            System.out.println("Method: " + req.getVerb());
+            System.out.println("Uri: " + req.getUri());
+            System.out.println("HTTP Version: " + req.getHttpVersion());
+            System.out.println("Header: " + req.getHeaders());
+            System.out.println( "-------------------------" );
+
+            client.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
