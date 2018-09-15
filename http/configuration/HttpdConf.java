@@ -42,21 +42,37 @@ public class HttpdConf {
                 String[] ele = line.split(" ");
 
                 if (ele[0].equals(SERVER_ROOT)) {
+
                     serverRoot = ele[1].replaceAll("\"", "");
+
                 } else if (ele[0].equals(DOCUMENT_ROOT)) {
+
                     docRoot = ele[1].replaceAll("\"","");
+
                 } else if (ele[0].equals(PORT)) {
+
                     port = Integer.parseInt(ele[1]);
+
                 } else if (ele[0].equals(LOG_FILE)) {
+
                     logFile = ele[1].replaceAll("\"","");
+
                 } else if (ele[0].equals(SCRIPT_ALIAS)) {
+
                     scriptAlias.put(ele[1], ele[2].replaceAll("\"",""));
+
                 } else if (ele[0].equals(ALIAS)) {
+
                     alias.put(ele[1], ele[2].replaceAll("\"",""));
+
                 } else if (ele[0].equals(ACCESS_FILE)) {
+
                     accessFile = ele[1].replaceAll("\"","");
+
                 } else if (ele[0].equals(DIRECTORY_INDEX)) {
+
                     directoryIndex = ele[1].replaceAll("\"","");
+
                 }
             }
         } catch (IOException e) {
