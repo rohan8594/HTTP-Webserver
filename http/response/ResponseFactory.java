@@ -3,28 +3,38 @@ package http.response;
 import http.request.Request;
 import http.resource.Resource;
 import java.io.*;
+import java.text.*;
+import java.util.*;
+import http.configuration.MimeTypes;
+import java.nio.file.Files;
 
 public class ResponseFactory {
     public ResponseFactory(){}
     
     public Response getResponse(Request request, Resource resource)
     {
-        if(resource.isProtected())
+        try{
+            if(resource.isProtected())
+            {
+                /*
+                if 401 auth header check
+                {
+                    response.setCode(401);
+                    response.setReasonPhrase("Unauthorized");
+                    return response;
+                }
+                if 403 valid password check
+                {
+                    response.setCode(403);
+                    response.setReasonPhrase("Forbidden");
+                    return response;
+                }
+                */
+            }
+        }
+        catch (IOException e)
         {
-            /*
-            if 401 auth header check
-            {
-                response.setCode(401);
-                response.setReasonPhrase("Unauthorized");
-                return response;
-            }
-            if 403 valid password check
-            {
-                response.setCode(403);
-                response.setReasonPhrase("Forbidden");
-                return response;
-            }
-            */
+            error500(resource);
         }
         
         File path = new File(resource.absolutePath());
@@ -128,23 +138,66 @@ public class ResponseFactory {
     
     private Response GETrequest(Request request, Resource resource)
     {
-        Response response = new Response(resource);
-        //return 304 if unmodified in client's cache, 
-        //otherwise replace with request body and return 200
-        //compare last modified request header to file
-        if()
-        response.setCode(200);
-        response.setReasonPhrase("OK");
-        response.setCode(304);
-        response.setReasonPhrase("Not Modified");
+        Response response = HEADrequest(request, resource);
         
+        if(response.getCode() == 200)
+        {
+            File path = new File(resource.absolutePath());
+            try{
+                response.setBody(Files.readAllBytes(path.toPath()));
+            }
+            catch(IOException e)
+            {
+                return error500(resource);
+            }
+        }
         return response;
     }
     
     private Response HEADrequest(Request request, Resource resource)
     {
         Response response = new Response(resource);
-        //only send headers of get request, not body
+        
+        File path = new File(resource.absolutePath());
+        long systemDate = path.lastModified();
+        long HOUR = 3600*1000;
+        systemDate = systemDate + HOUR * 7;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy HH:mm:ss");
+        Date returnDate = new Date(systemDate);
+        response.addHeader("Last-Modified: " + dateFormat.format(returnDate) + " GMT");
+        
+        if(request.getHeaders().containsKey("Last-Modified:"));
+        {
+            String sentTime = request.getHeaders().get("Last-Modified:").get(1)
+                    + " " + request.getHeaders().get("Last-Modified:").get(2)
+                    + " " + request.getHeaders().get("Last-Modified:").get(3)
+                    + " " + request.getHeaders().get("Last-Modified:").get(4);
+            
+            Date requestDate = new Date();
+            try
+            {
+                requestDate = dateFormat.parse(sentTime);
+            }
+            catch (ParseException e)
+            {
+                return error500(resource);
+            }
+            
+            if(systemDate < requestDate.getTime())
+            {
+                response.setCode(304);
+                response.setReasonPhrase("Not Modified");
+                return response;
+            }
+        }
+        
+        MimeTypes mtype = new MimeTypes("conf" + File.separator + "mime.types");
+        int index = resource.absolutePath().indexOf(".");
+        String fileType = resource.absolutePath().substring(index + 1);
+        String contentType = mtype.lookUp(fileType);
+        response.addHeader("Content-Type: " + contentType);
+        response.addHeader("Content-Length: " + path.length());
+        
         response.setCode(200);
         response.setReasonPhrase("OK");
         
