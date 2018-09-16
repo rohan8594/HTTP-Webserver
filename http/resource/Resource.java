@@ -11,4 +11,19 @@ public class Resource {
     {
         
     }
+    
+    public boolean isProtected()
+    {
+        return this.isProtected;
+    }
+    
+    public String absolutePath()
+    {
+        return this.AbsolutePath;
+    }
+    
+    public boolean isScript()
+    {
+        return isScript;
+    }
 }
