@@ -1,5 +1,5 @@
 import http.configuration.*;
-import http.request.*;
+import http.serverworker.Worker;
 
 import java.net.*;
 import java.io.*;
@@ -19,23 +19,14 @@ public class WebServer {
         while (true) {
             Socket client = socket.accept();
             if (client != null) {
-                Request req = new Request(client);
-
-                System.out.println( "-------------------------" );
-                System.out.println("Method: " + req.getVerb());
-                System.out.println("Uri: " + req.getUri());
-                System.out.println("HTTP Version: " + req.getHttpVersion());
-                System.out.println("Header: " + req.getHeaders());
-                System.out.println( "-------------------------" );
-
-                client.close();
+                Worker workerThread = new Worker(client, config, mimes);
+                workerThread.start();
             }
         }
     }
 
     public static void main(String[] args) throws IOException {
-
         WebServer.start();
     }
-
+  
 }
