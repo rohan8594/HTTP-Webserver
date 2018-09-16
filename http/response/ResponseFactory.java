@@ -6,11 +6,12 @@ import java.io.*;
 
 public class ResponseFactory {
     public ResponseFactory(){}
-    
+
     public Response getResponse(Request request, Resource resource)
     {
-        if(resource.isProtected())
-        {
+        try {
+            if(resource.isProtected())
+            {
             /*
             if 401 auth header check
             {
@@ -25,6 +26,9 @@ public class ResponseFactory {
                 return response;
             }
             */
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         
         File path = new File(resource.absolutePath());
