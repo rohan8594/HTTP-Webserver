@@ -87,4 +87,8 @@ public class Resource {
             return false;
         }
     }
+
+    public HttpdConf getConfig() {
+        return config;
+    }
 }
