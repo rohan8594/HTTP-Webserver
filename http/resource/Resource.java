@@ -17,13 +17,16 @@ public class Resource {
     private HttpdConf config;
     private Set<String> arrOfAliases;
     private Set<String> arrOfScriptAliases;
+    private boolean htaccessExists;
+    //private Htaccess htaccess;
 
     public Resource(String uri, HttpdConf config) {
         this.uri = uri;
         this.config = config;
+        this.generateAbsolutePath();
     }
 
-    public String absolutePath() {
+    private void generateAbsolutePath() {
         modifiedUri = uri;
         arrOfAliases = config.getAlias().keySet();
         arrOfScriptAliases = config.getScriptAlias().keySet();
@@ -57,10 +60,31 @@ public class Resource {
             modifiedUri = modifiedUri + "index.html";
         }
 
+    }
+
+    public String absolutePath() {
         return modifiedUri;
     }
 
     public boolean isScript() {
         return isScript;
+    }
+
+    public boolean isProtected() throws IOException {
+        String directoryPath = new File(modifiedUri).getParent();
+        directoryPath = directoryPath + "/";
+
+        try {
+            htaccessExists = new File(directoryPath, config.getAccessFile()).exists();
+        } catch (Exception e) {
+            e.getMessage();
+        }
+
+        if (htaccessExists) {
+            //htaccess = new Htaccess();
+            return true;
+        } else {
+            return false;
+        }
     }
 }

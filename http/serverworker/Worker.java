@@ -2,6 +2,7 @@ package http.serverworker;
 
 import http.configuration.*;
 import http.request.*;
+import http.resource.*;
 
 import java.net.*;
 import java.io.*;
@@ -29,6 +30,10 @@ public class Worker extends Thread {
             System.out.println("HTTP Version: " + req.getHttpVersion());
             System.out.println("Header: " + req.getHeaders());
             System.out.println( "-------------------------" );
+
+            Resource resrc = new Resource(req.getUri(), config);
+            System.out.println("Absolute Path: " + resrc.absolutePath());
+            //System.out.println(resrc.isProtected());
 
             client.close();
         } catch (IOException e) {
