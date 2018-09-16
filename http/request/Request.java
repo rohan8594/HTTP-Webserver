@@ -9,6 +9,7 @@ import java.util.StringTokenizer;
 public class Request {
     private String Uri;
     private String Verb;
+    private String Query;
     private byte[] Body;
     private String httpVersion;
     private HashMap<String, ArrayList<String>> Headers;
@@ -54,7 +55,17 @@ public class Request {
                         }
                         else
                         {
-                            this.Uri = tokens.get(1);
+                            String query = "?query=";
+                            if(!tokens.get(1).contains(query))
+                            {
+                                this.Uri = tokens.get(1);
+                            }
+                            else
+                            {
+                                int index = tokens.get(1).indexOf(query);
+                                this.Uri = tokens.get(1).substring(0, index);
+                                this.Query = tokens.get(1).substring(index + query.length());
+                            }
                             this.httpVersion = tokens.get(2);
                         }
                     }
@@ -104,6 +115,11 @@ public class Request {
     public String getHttpVersion()
     {
         return this.httpVersion;
+    }
+    
+    public String getQuery()
+    {
+        return this.Query;
     }
     
     public HashMap<String, ArrayList<String>> getHeaders()
