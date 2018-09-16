@@ -132,6 +132,7 @@ public class ResponseFactory {
         //return 304 if unmodified in client's cache, 
         //otherwise replace with request body and return 200
         //compare last modified request header to file
+        if()
         response.setCode(200);
         response.setReasonPhrase("OK");
         response.setCode(304);
