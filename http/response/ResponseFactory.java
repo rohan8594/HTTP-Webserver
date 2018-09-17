@@ -173,30 +173,34 @@ public class ResponseFactory {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy HH:mm:ss");
         Date returnDate = new Date(systemDate);
         response.addHeader("Last-Modified: " + dateFormat.format(returnDate) + " GMT");
-        
-        if(request.getHeaders().containsKey("Last-Modified:"));
-        {
-            String sentTime = request.getHeaders().get("Last-Modified:").get(1)
-                    + " " + request.getHeaders().get("Last-Modified:").get(2)
-                    + " " + request.getHeaders().get("Last-Modified:").get(3)
-                    + " " + request.getHeaders().get("Last-Modified:").get(4);
-            
-            Date requestDate = new Date();
-            try
+
+        try {
+            if(request.getHeaders().containsKey("Last-Modified:"));
             {
-                requestDate = dateFormat.parse(sentTime);
+                String sentTime = request.getHeaders().get("Last-Modified:").get(1)
+                        + " " + request.getHeaders().get("Last-Modified:").get(2)
+                        + " " + request.getHeaders().get("Last-Modified:").get(3)
+                        + " " + request.getHeaders().get("Last-Modified:").get(4);
+
+                Date requestDate = new Date();
+                try
+                {
+                    requestDate = dateFormat.parse(sentTime);
+                }
+                catch (ParseException e)
+                {
+                    return error500(resource);
+                }
+
+                if(systemDate < requestDate.getTime())
+                {
+                    response.setCode(304);
+                    response.setReasonPhrase("Not Modified");
+                    return response;
+                }
             }
-            catch (ParseException e)
-            {
-                return error500(resource);
-            }
-            
-            if(systemDate < requestDate.getTime())
-            {
-                response.setCode(304);
-                response.setReasonPhrase("Not Modified");
-                return response;
-            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         
         MimeTypes mtype = new MimeTypes("conf" + File.separator + "mime.types");

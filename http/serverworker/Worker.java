@@ -52,10 +52,6 @@ public class Worker extends Thread {
             ResponseFactory resFac = new ResponseFactory();
             Response res = resFac.getResponse(req, resrc);
             res.sendResponse(client);
-
-            ResponseFactory resfactory = new ResponseFactory();
-            Response res = resfactory.getResponse(req, resrc);
-            res.sendResponse(client);
             
             client.close();
         } catch (IOException e) {
