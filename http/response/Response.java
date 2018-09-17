@@ -78,7 +78,7 @@ public class Response {
             
             output.flush();
             output.close();
-            client.close();
+            //client.close();
         }
         catch (IOException e)
         {

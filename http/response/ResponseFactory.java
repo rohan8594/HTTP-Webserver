@@ -2,6 +2,7 @@ package http.response;
 
 import http.request.Request;
 import http.resource.Resource;
+import http.configuration.*;
 import java.io.*;
 import java.text.*;
 import java.util.*;
@@ -9,32 +10,39 @@ import http.configuration.MimeTypes;
 import java.nio.file.Files;
 
 public class ResponseFactory {
+
+    private Htaccess htaccess;
+    private Htpassword htpassword;
+
     public ResponseFactory(){}
-    
+
     public Response getResponse(Request request, Resource resource)
     {
-        try{
-            if(resource.isProtected())
-            {
-                /*
-                if 401 auth header check
-                {
+        try {
+            if(resource.isProtected()) {
+                htaccess = new Htaccess(resource);
+                htpassword = new Htpassword(htaccess.getAuthUserFile());
+
+                if (request.getHeaders().containsKey("Authorization:")) {
+
+                    String authInfo = request.getHeaders().get("Authorization:").get(0);
+
+                    if(!(htpassword.isAuthorized(authInfo))) {
+                        Response response = new Response(resource);
+                        response.setCode(403);
+                        response.setReasonPhrase("Forbidden");
+                        return response;
+                    }
+
+                } else {
+                    Response response = new Response(resource);
                     response.setCode(401);
                     response.setReasonPhrase("Unauthorized");
                     return response;
                 }
-                if 403 valid password check
-                {
-                    response.setCode(403);
-                    response.setReasonPhrase("Forbidden");
-                    return response;
-                }
-                */
             }
-        }
-        catch (IOException e)
-        {
-            error500(resource);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         
         File path = new File(resource.absolutePath());
