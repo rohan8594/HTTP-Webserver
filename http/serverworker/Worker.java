@@ -13,7 +13,8 @@ public class Worker extends Thread {
     private Socket client;
     private HttpdConf config;
     private MimeTypes mimes;
-    private Htaccess accessFile;
+    private Htaccess htaccess;
+    private Htpassword htpassword;
 
     public Worker(Socket client, HttpdConf config, MimeTypes mimes) {
         this.client = client;
@@ -36,15 +37,16 @@ public class Worker extends Thread {
             Resource resrc = new Resource(req.getUri(), config);
 
             /*
-            System.out.println("Absolute Path: " + resrc.absolutePath());
-
             if(resrc.isProtected()) {
-                accessFile = new Htaccess(resrc);
-                System.out.println("File: " + accessFile.getAuthUserFile());
-                System.out.println("Type: " + accessFile.getAuthType());
+                htaccess = new Htaccess(resrc);
+
+                System.out.println(accessFile.getAuthUserFile());
+                System.out.println(accessFile.getAuthType());
                 System.out.println(accessFile.getAuthName());
                 System.out.println(accessFile.getRequire());
-                accessFile.testGetUsers();
+
+                htpassword = new Htpassword(htaccess.getAuthUserFile());
+                System.out.println(htpassword.getUsers());
             }*/
 
             ResponseFactory resFac = new ResponseFactory();

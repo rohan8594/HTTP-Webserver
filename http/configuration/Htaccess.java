@@ -28,7 +28,6 @@ public class Htaccess {
 
             if (elements[0].equals("AuthUserFile")) {
                 authUserFile = elements[1].replaceAll("\"","");
-                htpwd = new Htpassword(authUserFile);
             }
             else if (elements[0].equals("AuthType")) {
                 authType = elements[1];
@@ -58,7 +57,4 @@ public class Htaccess {
         return require;
     }
 
-    public void testGetUsers() {
-        System.out.println(htpwd.getUsers());
-    }
 }
