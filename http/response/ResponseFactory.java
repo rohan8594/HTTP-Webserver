@@ -175,7 +175,7 @@ public class ResponseFactory {
         response.addHeader("Last-Modified: " + dateFormat.format(returnDate) + " GMT");
 
         try {
-            if(request.getHeaders().containsKey("Last-Modified:"));
+            if(request.getHeaders().containsKey("Last-Modified:"))
             {
                 String sentTime = request.getHeaders().get("Last-Modified:").get(1)
                         + " " + request.getHeaders().get("Last-Modified:").get(2)
