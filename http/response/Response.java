@@ -12,7 +12,7 @@ public class Response {
     private int ResponseCode;
     private String ReasonPhrase;
     private Resource ResponseResource;
-    private Byte[] Body;
+    private byte[] Body;
     private ArrayList<String> Headers;
     
     public Response(Resource rsrc)
@@ -37,6 +37,11 @@ public class Response {
         this.ResponseCode = code;
     }
     
+    public int getCode()
+    {
+        return this.ResponseCode;
+    }
+    
     public void setReasonPhrase(String reason)
     {
         this.ReasonPhrase = reason;
@@ -47,7 +52,7 @@ public class Response {
         this.Headers.add(header);
     }
     
-    public void setBody(Byte[] body)
+    public void setBody(byte[] body)
     {
         this.Body = body;
     }
@@ -73,7 +78,7 @@ public class Response {
             
             output.flush();
             output.close();
-            client.close();
+            //client.close();
         }
         catch (IOException e)
         {

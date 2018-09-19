@@ -13,7 +13,7 @@ public class HttpdConf {
     public static final String LOG_FILE = "LogFile";
     public static final String SCRIPT_ALIAS = "ScriptAlias";
     public static final String ALIAS = "Alias";
-    public static final String ACCESS_FILE = "AccessFile";
+    public static final String ACCESS_FILE_NAME = "AccessFileName";
     public static final String DIRECTORY_INDEX = "DirectoryIndex";
 
     int port;
@@ -65,7 +65,7 @@ public class HttpdConf {
 
                     alias.put(ele[1], ele[2].replaceAll("\"",""));
 
-                } else if (ele[0].equals(ACCESS_FILE)) {
+                } else if (ele[0].equals(ACCESS_FILE_NAME)) {
 
                     accessFile = ele[1].replaceAll("\"","");
 

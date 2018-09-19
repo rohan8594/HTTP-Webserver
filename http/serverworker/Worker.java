@@ -3,6 +3,7 @@ package http.serverworker;
 import http.configuration.*;
 import http.request.*;
 import http.resource.*;
+import http.response.*;
 
 import java.net.*;
 import java.io.*;
@@ -12,6 +13,8 @@ public class Worker extends Thread {
     private Socket client;
     private HttpdConf config;
     private MimeTypes mimes;
+    private Htaccess htaccess;
+    private Htpassword htpassword;
 
     public Worker(Socket client, HttpdConf config, MimeTypes mimes) {
         this.client = client;
@@ -32,9 +35,24 @@ public class Worker extends Thread {
             System.out.println( "-------------------------" );
 
             Resource resrc = new Resource(req.getUri(), config);
-            System.out.println("Absolute Path: " + resrc.absolutePath());
-            //System.out.println(resrc.isProtected());
 
+            /*
+            if(resrc.isProtected()) {
+                htaccess = new Htaccess(resrc);
+
+                System.out.println(accessFile.getAuthUserFile());
+                System.out.println(accessFile.getAuthType());
+                System.out.println(accessFile.getAuthName());
+                System.out.println(accessFile.getRequire());
+
+                htpassword = new Htpassword(htaccess.getAuthUserFile());
+                System.out.println(htpassword.getUsers());
+            }*/
+
+            ResponseFactory resFac = new ResponseFactory();
+            Response res = resFac.getResponse(req, resrc);
+            res.sendResponse(client);
+            
             client.close();
         } catch (IOException e) {
             e.printStackTrace();
