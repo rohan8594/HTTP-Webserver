@@ -152,7 +152,8 @@ public class ResponseFactory {
         {
             File path = new File(resource.absolutePath());
             try{
-                response.setBody(Files.readAllBytes(path.toPath()));
+                String body_content = new String(Files.readAllBytes(path.toPath()));
+                response.setBody(body_content);
             }
             catch(IOException e)
             {
