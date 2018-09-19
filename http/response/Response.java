@@ -12,7 +12,7 @@ public class Response {
     private int ResponseCode;
     private String ReasonPhrase;
     private Resource ResponseResource;
-    private String Body;
+    private byte[] Body;
     private ArrayList<String> Headers;
     
     public Response(Resource rsrc)
@@ -52,7 +52,7 @@ public class Response {
         this.Headers.add(header);
     }
     
-    public void setBody(String body)
+    public void setBody(byte[] body)
     {
         this.Body = body;
     }
@@ -62,24 +62,26 @@ public class Response {
         //generate correct reponse pieces
         try
         {
-            PrintWriter output = new PrintWriter(client.getOutputStream());
+            StringBuilder responseStr = new StringBuilder();
+            OutputStream output = client.getOutputStream();
 
-            output.print("HTTP/1.1 " + ResponseCode + " " + ReasonPhrase + "\r\n");
+            responseStr.append("HTTP/1.1 ").append(ResponseCode).append(" ").append(ReasonPhrase).append("\r\n");
             for(int i = 0; i < Headers.size(); i ++)
             {
-                output.print(Headers.get(i) + "\r\n");
+                responseStr.append(Headers.get(i)).append("\r\n");
             }
+
+            byte[] responseBytes = responseStr.toString().getBytes();
+            output.write(responseBytes);
 
             if(Body != null)
             {
-                System.out.println(Body);
-                output.print("\r\n");
-                output.print(Body + "\r\n");
+                output.write("\r\n".getBytes());
+                output.write(Body);
             }
 
-            output.flush();
             output.close();
-            //client.close();
+
         }
         catch (IOException e)
         {
