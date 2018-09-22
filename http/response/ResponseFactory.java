@@ -25,7 +25,7 @@ public class ResponseFactory {
 
                 if (request.getHeaders().containsKey("Authorization:")) {
 
-                    String authInfo = request.getHeaders().get("Authorization:").get(0);
+                    String authInfo = request.getHeaders().get("Authorization:").get(1);
 
                     if(!(htpassword.isAuthorized(authInfo))) {
                         Response response = new Response(resource);
@@ -38,6 +38,7 @@ public class ResponseFactory {
                     Response response = new Response(resource);
                     response.setCode(401);
                     response.setReasonPhrase("Unauthorized");
+                    response.addHeader("WWW-Authenticate: " + htaccess.getAuthType() + " realm=" + htaccess.getAuthName());
                     return response;
                 }
             }
