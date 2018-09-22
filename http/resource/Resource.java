@@ -57,7 +57,13 @@ public class Resource {
         }
 
         if (modifiedUri.charAt(modifiedUri.length() - 1) == '/') {
-            modifiedUri = modifiedUri + "index.html";
+            if(config.getDirectoryIndex() != null) {
+                modifiedUri = modifiedUri + config.getDirectoryIndex();
+                System.out.println(modifiedUri);
+            } else {
+                modifiedUri = modifiedUri + "index.html";
+            }
+
         }
 
     }
