@@ -90,12 +90,18 @@ public class ResponseFactory {
     private Response scriptRequest(Request request, Resource resource)
     {
         Response response = new Response(resource);
+
+        File script = new File(resource.absolutePath());
         
         try 
             {
-                //HANDLE IN SEPERATE CLASS
-                ProcessBuilder processBuilder = new ProcessBuilder();
-                processBuilder.directory(new File(resource.absolutePath()));
+                BufferedReader reader = new BufferedReader(new FileReader(script));
+
+                List<String> args;
+                args = getArguments(reader, resource);
+
+                ProcessBuilder processBuilder = new ProcessBuilder(args);
+
                 //need to convert all headers in request to environment variable
                 processBuilder.command();
                 Process process = processBuilder.start();
@@ -109,7 +115,21 @@ public class ResponseFactory {
                 return error500(resource);
             }
     }
-    
+
+    private List<String> getArguments(BufferedReader reader, Resource resource) throws IOException {
+
+        List<String> args = new ArrayList<>();
+
+        String line = reader.readLine();
+        String[] scriptPath = line.split(" ");
+        String path = scriptPath[0].replace("!#", "");
+
+        args.add(path);
+        args.add(scriptPath[1]);
+        args.add(resource.absolutePath());
+        return args;
+    }
+
     private Response PUTrequest(Request request, Resource resource)
     {
         Response response = new Response(resource);
