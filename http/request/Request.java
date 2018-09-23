@@ -47,7 +47,7 @@ public class Request {
                     }
                     if(requestLine)
                     {
-                        this.Verb = tokens.get(0);
+                        this.Verb = tokens.get(0).toUpperCase();
                         if(tokens.size() < 3)
                         {
                             this.Uri = null;
@@ -78,10 +78,10 @@ public class Request {
                         ArrayList<String> headerValues = new ArrayList<>();
                         for(int i = 1; i < tokens.size(); i++)
                         {
-                            headerValues.add(tokens.get(i));
+                            headerValues.add(tokens.get(i).toLowerCase());
                         }
                         
-                        this.Headers.put(tokens.get(0), headerValues);
+                        this.Headers.put(tokens.get(0).toLowerCase(), headerValues);
                     }
                     requestLine = false;
                 }
@@ -90,14 +90,17 @@ public class Request {
                     Body = line.getBytes();
                 }
             }
-            if(this.Headers.containsKey("Content-Length:"))
+            if(this.Headers.containsKey("content-length:"))
             {
                 line = "";
-                for(int i = 0; i < Integer.parseInt(Headers.get("Content-Length:").get(0)); i++)
+                for(int i = 0; i < Integer.parseInt(Headers.get("content-length:").get(0)); i++)
                 {
                     line += requestReader.read();
                 }
+                
+                System.out.println(line);
                 Body = line.getBytes();
+                System.out.println(new String(Body, "UTF-8"));
             }
         }
         catch(IOException e)

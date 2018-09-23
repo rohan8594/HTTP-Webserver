@@ -19,14 +19,16 @@ public class ResponseFactory {
     public Response getResponse(Request request, Resource resource)
     {
         System.out.println(resource.absolutePath());
+        if(true)
+            return PUTrequest(request, resource);
         try {
             if(resource.isProtected()) {
                 htaccess = new Htaccess(resource);
                 htpassword = new Htpassword(htaccess.getAuthUserFile());
 
-                if (request.getHeaders().containsKey("Authorization:")) {
+                if (request.getHeaders().containsKey("authorization:")) {
 
-                    String authInfo = request.getHeaders().get("Authorization:").get(1);
+                    String authInfo = request.getHeaders().get("authorization:").get(1);
 
                     if(!(htpassword.isAuthorized(authInfo))) {
                         Response response = new Response(resource);
@@ -50,7 +52,7 @@ public class ResponseFactory {
         File path = new File(resource.absolutePath());
         if(!path.exists())
         {
-            if(request.getVerb() == "PUT")
+            if(request.getVerb().equals("PUT"))
             {
                 path = new File(resource.getDirectory());
                 if(path.exists())
@@ -114,7 +116,8 @@ public class ResponseFactory {
     private Response PUTrequest(Request request, Resource resource)
     {
         Response response = new Response(resource);
-        File path = new File(resource.absolutePath());
+        //File path = new File(resource.absolutePath());
+        File path = new File("public_html" + File.separator + "test.txt");
         
         try
         {
@@ -217,12 +220,12 @@ public class ResponseFactory {
         response.addHeader("Last-Modified: " + dateFormat.format(returnDate) + " GMT");
 
         try {
-            if(request.getHeaders().containsKey("Last-Modified:"))
+            if(request.getHeaders().containsKey("last-modified:"))
             {
-                String sentTime = request.getHeaders().get("Last-Modified:").get(1)
-                        + " " + request.getHeaders().get("Last-Modified:").get(2)
-                        + " " + request.getHeaders().get("Last-Modified:").get(3)
-                        + " " + request.getHeaders().get("Last-Modified:").get(4);
+                String sentTime = request.getHeaders().get("last-modified:").get(1)
+                        + " " + request.getHeaders().get("last-modified:").get(2)
+                        + " " + request.getHeaders().get("last-modified:").get(3)
+                        + " " + request.getHeaders().get("last-modified:").get(4);
 
                 Date requestDate = new Date();
                 try
