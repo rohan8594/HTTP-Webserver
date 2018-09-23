@@ -113,9 +113,8 @@ public class ResponseFactory {
     private Response PUTrequest(Request request, Resource resource)
     {
         Response response = new Response(resource);
-        //File path = new File(resource.absolutePath());
-        File path = new File("public_html" + File.separator + "test.txt");
-        
+        File path = new File(resource.absolutePath());
+
         try
         {
             FileOutputStream outStream = new FileOutputStream(path, false);
@@ -162,6 +161,7 @@ public class ResponseFactory {
         if(resource.isDirectory())
         {
             path = new File(resource.getDirectory() + "NewPostFile.txt");
+            response.addHeader("Content-Location: " + resource.getDirectory() + "NewPostFile.txt");
         }
         else
         {

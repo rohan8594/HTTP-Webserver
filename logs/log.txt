@@ -58,3 +58,15 @@
 0:0:0:0:0:0:0:1 - localhost [23/9/2018:13:45:06 -0700] "GET /js/image-test.js HTTP/1.1" 200 678
 0:0:0:0:0:0:0:1 - localhost [23/9/2018:13:45:06 -0700] "GET /images/sushi.jpg HTTP/1.1" 200 40183
 0:0:0:0:0:0:0:1 - localhost [23/9/2018:13:45:37 -0700] "GET / HTTP/1.1" 304 -
+0:0:0:0:0:0:0:1 - localhost [23/9/2018:14:23:37 -0700] "PUT /ab1/ab2/test.txt HTTP/1.1" 201 -
+0:0:0:0:0:0:0:1 - localhost [23/9/2018:14:27:16 -0700] "PUT /ab1/ab2/test.txt HTTP/1.1" 201 -
+0:0:0:0:0:0:0:1 - localhost [23/9/2018:14:27:41 -0700] "PUT /ab1/ab2/test.txt HTTP/1.1" 201 -
+0:0:0:0:0:0:0:1 - localhost [23/9/2018:14:28:01 -0700] "POST /ab1/ab2/test.txt HTTP/1.1" 200 -
+0:0:0:0:0:0:0:1 - localhost [23/9/2018:14:28:25 -0700] "POST /ab1/ab2/test.txt HTTP/1.1" 404 -
+0:0:0:0:0:0:0:1 - localhost [23/9/2018:14:29:52 -0700] "POST /ab1/ab2/test.txt HTTP/1.1" 404 -
+0:0:0:0:0:0:0:1 - localhost [23/9/2018:14:30:09 -0700] "POST /ab1/ab2/ HTTP/1.1" 200 -
+0:0:0:0:0:0:0:1 - localhost [23/9/2018:14:34:52 -0700] "POST /ab1/ab2/ HTTP/1.1" 200 -
+0:0:0:0:0:0:0:1 - localhost [23/9/2018:14:35:45 -0700] "POST /ab1/ab2/ HTTP/1.1" 200 -
+0:0:0:0:0:0:0:1 - localhost [23/9/2018:14:35:55 -0700] "POST /ab1/ab2/ HTTP/1.1" 200 -
+0:0:0:0:0:0:0:1 - localhost [23/9/2018:14:36:10 -0700] "POST /ab1/ab2/test.txt HTTP/1.1" 404 -
+0:0:0:0:0:0:0:1 - localhost [23/9/2018:14:36:16 -0700] "PUT /ab1/ab2/test.txt HTTP/1.1" 201 -
