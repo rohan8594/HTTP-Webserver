@@ -13,8 +13,12 @@ public class ResponseFactory {
 
     private Htaccess htaccess;
     private Htpassword htpassword;
+    private MimeTypes mimes;
 
-    public ResponseFactory(){}
+    public ResponseFactory(MimeTypes mime)
+    {
+        this.mimes = mime;
+    }
 
     public Response getResponse(Request request, Resource resource)
     {
@@ -93,10 +97,8 @@ public class ResponseFactory {
         
         try 
             {
-                //HANDLE IN SEPERATE CLASS
                 ProcessBuilder processBuilder = new ProcessBuilder();
                 processBuilder.directory(new File(resource.absolutePath()));
-                //need to convert all headers in request to environment variable
                 processBuilder.command();
                 Process process = processBuilder.start();
                 
@@ -247,10 +249,9 @@ public class ResponseFactory {
             e.printStackTrace();
         }
         
-        MimeTypes mtype = new MimeTypes("conf" + File.separator + "mime.types");
         int index = resource.absolutePath().indexOf(".");
         String fileType = resource.absolutePath().substring(index + 1);
-        String contentType = mtype.lookUp(fileType);
+        String contentType = mimes.lookUp(fileType);
         response.addHeader("Content-Type: " + contentType);
         response.addHeader("Content-Length: " + path.length());
         response.setContentLength(path.length());
