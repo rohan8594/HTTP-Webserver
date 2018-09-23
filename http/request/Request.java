@@ -33,7 +33,7 @@ public class Request {
         try
         {
             BufferedReader requestReader = new BufferedReader(new InputStreamReader(Client.getInputStream()));
-
+            
             while(!(line = requestReader.readLine()).equals(""))
             {
                 if (!body)
@@ -93,7 +93,7 @@ public class Request {
         }
         catch(IOException e)
         {
-            System.out.println("Error reading parsing request (404):   " + e);
+            System.out.println("Error reading parsing request (500):   " + e);
         } 
     }
     
