@@ -37,7 +37,7 @@ public class Worker extends Thread {
 
             Resource resrc = new Resource(req.getUri(), config);
 
-            ResponseFactory resFac = new ResponseFactory();
+            ResponseFactory resFac = new ResponseFactory(mimes);
             Response res = resFac.getResponse(req, resrc);
             res.sendResponse(client);
 

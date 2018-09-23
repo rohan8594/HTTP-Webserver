@@ -13,8 +13,12 @@ public class ResponseFactory {
 
     private Htaccess htaccess;
     private Htpassword htpassword;
+    private MimeTypes mimes;
 
-    public ResponseFactory(){}
+    public ResponseFactory(MimeTypes mime)
+    {
+        this.mimes = mime;
+    }
 
     public Response getResponse(Request request, Resource resource)
     {
@@ -102,9 +106,20 @@ public class ResponseFactory {
 
                 ProcessBuilder processBuilder = new ProcessBuilder(args);
 
-                //need to convert all headers in request to environment variable
-                processBuilder.command();
+                setEnvironmentVariables(request, processBuilder);
+
                 Process process = processBuilder.start();
+                OutputStream scriptIn = process.getOutputStream();
+                scriptIn.write(request.getBody());
+                BufferedReader scriptOut = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                String line, scriptResponse = "";
+                while((line = scriptOut.readLine()) != null)
+                {
+                    scriptResponse += line;
+                }
+                
+                response.setIsScript();
+                response.setScriptResponse(scriptResponse);
                 
                 response.setCode(200);
                 response.setReasonPhrase("OK");
@@ -114,6 +129,24 @@ public class ResponseFactory {
             {
                 return error500(resource);
             }
+    }
+
+    private void setEnvironmentVariables(Request request, ProcessBuilder processBuilder) {
+        processBuilder.environment().put("SERVER_PROTOCOL", "HTTP/1.1");
+        if(request.hasQuery())
+        {
+            processBuilder.environment().put("QUERY_STRING", request.getQuery());
+        }
+        HashMap<String, ArrayList<String>> map = request.getHeaders();
+        for(String key : map.keySet())
+        {
+            String headerArgs = "";
+            for(int i = 0; i > map.get(key).size(); i++)
+            {
+                headerArgs += " " + map.get(key).get(i).toUpperCase();
+            }
+            processBuilder.environment().put("HTTP_" + key.toUpperCase(), headerArgs);
+        }
     }
 
     private List<String> getArguments(BufferedReader reader, Resource resource) throws IOException {
@@ -267,10 +300,9 @@ public class ResponseFactory {
             e.printStackTrace();
         }
         
-        MimeTypes mtype = new MimeTypes("conf" + File.separator + "mime.types");
         int index = resource.absolutePath().indexOf(".");
         String fileType = resource.absolutePath().substring(index + 1);
-        String contentType = mtype.lookUp(fileType);
+        String contentType = mimes.lookUp(fileType);
         response.addHeader("Content-Type: " + contentType);
         response.addHeader("Content-Length: " + path.length());
         response.setContentLength(path.length());
