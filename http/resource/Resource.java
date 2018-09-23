@@ -6,6 +6,7 @@ import http.request.Request;
 import java.net.*;
 import java.io.*;
 import java.util.*;
+//import java.util.regex.Matcher;
 
 public class Resource {
 
@@ -18,6 +19,8 @@ public class Resource {
     private Set<String> arrOfAliases;
     private Set<String> arrOfScriptAliases;
     private boolean htaccessExists;
+    private boolean isDirectory;
+    private String directoryUri;
     //private Htaccess htaccess;
 
     public Resource(String uri, HttpdConf config) {
@@ -57,9 +60,19 @@ public class Resource {
         }
 
         if (modifiedUri.charAt(modifiedUri.length() - 1) == '/') {
+            this.isDirectory = true;
+            this.directoryUri = modifiedUri;
             modifiedUri = modifiedUri + "index.html";
         }
-
+        else
+        {
+            this.isDirectory = false;
+            this.directoryUri = modifiedUri.substring(0, modifiedUri.lastIndexOf("/"));
+        }
+        
+        //modifiedUri = "public_html\\Test1.txt";
+        //modifiedUri = "public_html/index.html";
+        //modifiedUri = modifiedUri.replace("/", Matcher.quoteReplacement(File.separator));
     }
 
     public String absolutePath() {
@@ -90,5 +103,15 @@ public class Resource {
 
     public HttpdConf getConfig() {
         return config;
+    }
+    
+    public String getDirectory()
+    {
+        return this.directoryUri;
+    }
+    
+    public boolean isDirectory()
+    {
+        return this.isDirectory;
     }
 }
