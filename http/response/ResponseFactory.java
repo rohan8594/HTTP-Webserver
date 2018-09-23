@@ -18,7 +18,6 @@ public class ResponseFactory {
 
     public Response getResponse(Request request, Resource resource)
     {
-        System.out.println(resource.absolutePath());
         try {
             if(resource.isProtected()) {
                 htaccess = new Htaccess(resource);
@@ -50,7 +49,7 @@ public class ResponseFactory {
         File path = new File(resource.absolutePath());
         if(!path.exists())
         {
-            if(request.getVerb() == "PUT")
+            if(request.getVerb().equals("PUT"))
             {
                 path = new File(resource.getDirectory());
                 if(path.exists())
@@ -251,6 +250,8 @@ public class ResponseFactory {
         String contentType = mtype.lookUp(fileType);
         response.addHeader("Content-Type: " + contentType);
         response.addHeader("Content-Length: " + path.length());
+        response.setContentLength(path.length());
+        response.setContentLengthPresent(true);
         
         response.setCode(200);
         response.setReasonPhrase("OK");
