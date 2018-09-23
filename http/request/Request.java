@@ -90,6 +90,15 @@ public class Request {
                     Body = line.getBytes();
                 }
             }
+            if(this.Headers.containsKey("Content-Length:"))
+            {
+                line = "";
+                for(int i = 0; i < Integer.parseInt(Headers.get("Content-Length:").get(0)); i++)
+                {
+                    line += requestReader.read();
+                }
+                Body = line.getBytes();
+            }
         }
         catch(IOException e)
         {
