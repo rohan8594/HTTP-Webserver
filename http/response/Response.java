@@ -16,6 +16,8 @@ public class Response {
     private ArrayList<String> Headers;
     private long contentLength;
     private boolean isContentLengthPresent;
+    private boolean isScript;
+    private String scriptResponse;
     
     public Response(Resource rsrc)
     {
@@ -27,6 +29,8 @@ public class Response {
         
         Headers.add("Date: " + formatted);
         Headers.add("Server: Rohan & Jake's Server");
+        
+        this.isScript = false;
     }
     
     public Resource getResource()
@@ -78,6 +82,16 @@ public class Response {
     public ArrayList<String> getHeaders() {
         return Headers;
     }
+    
+    public void setIsScript()
+    {
+        this.isScript = true;
+    }
+    
+    public void setScriptResponse(String res)
+    {
+        this.scriptResponse = res;
+    }
 
     public void sendResponse(Socket client)
     {
@@ -88,20 +102,32 @@ public class Response {
             OutputStream output = client.getOutputStream();
 
             responseStr.append("HTTP/1.1 ").append(ResponseCode).append(" ").append(ReasonPhrase).append("\r\n");
-            for(int i = 0; i < Headers.size(); i ++)
+            
+            if(this.isScript)
             {
-                responseStr.append(Headers.get(i)).append("\r\n");
+                responseStr.append(Headers.get(0)).append("\r\n");
+                responseStr.append(Headers.get(1));
+                responseStr.append(this.scriptResponse);
+                
+                byte[] responseBytes = responseStr.toString().getBytes();
+                output.write(responseBytes);
             }
-
-            byte[] responseBytes = responseStr.toString().getBytes();
-            output.write(responseBytes);
-
-            if(Body != null)
+            else
             {
-                output.write("\r\n".getBytes());
-                output.write(Body);
-            }
+                for(int i = 0; i < Headers.size(); i ++)
+                {
+                    responseStr.append(Headers.get(i)).append("\r\n");
+                }
 
+                byte[] responseBytes = responseStr.toString().getBytes();
+                output.write(responseBytes);
+
+                if(Body != null)
+                {
+                    output.write("\r\n".getBytes());
+                    output.write(Body);
+                }
+            }
             output.close();
 
         }

@@ -14,6 +14,7 @@ public class Request {
     private String httpVersion;
     private HashMap<String, ArrayList<String>> Headers;
     private Socket Client; 
+    private boolean hasQuery;
     
     public Request(Socket client)
     {
@@ -56,12 +57,14 @@ public class Request {
                         if(!tokens.get(1).contains(query))
                         {
                             this.Uri = tokens.get(1);
+                            this.hasQuery = false;
                         }
                         else
                         {
                             int index = tokens.get(1).indexOf(query);
                             this.Uri = tokens.get(1).substring(0, index);
                             this.Query = tokens.get(1).substring(index + query.length());
+                            this.hasQuery = true;
                         }
                         this.httpVersion = tokens.get(2);
                     }
@@ -124,5 +127,10 @@ public class Request {
     public HashMap<String, ArrayList<String>> getHeaders()
     {
         return this.Headers;
+    }
+    
+    public boolean hasQuery()
+    {
+        return this.hasQuery;
     }
 }

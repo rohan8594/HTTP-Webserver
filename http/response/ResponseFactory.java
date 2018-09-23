@@ -98,9 +98,36 @@ public class ResponseFactory {
         try 
             {
                 ProcessBuilder processBuilder = new ProcessBuilder();
-                processBuilder.directory(new File(resource.absolutePath()));
-                processBuilder.command();
+                processBuilder.environment().put("SERVER_PROTOCOL", "HTTP/1.1");
+                if(request.hasQuery())
+                {
+                    processBuilder.environment().put("QUERY_STRING", request.getQuery());
+                }
+                HashMap<String, ArrayList<String>> map = request.getHeaders();
+                for(String key : map.keySet())
+                {
+                    String args = "";
+                    for(int i = 0; i > map.get(key).size(); i++)
+                    {
+                        args += " " + map.get(key).get(i).toUpperCase();
+                    }
+                    processBuilder.environment().put("HTTP_" + key.toUpperCase(), args);
+                }
+                
+                //processBuilder.directory(new File(resource.absolutePath()));
+                //processBuilder.command();
                 Process process = processBuilder.start();
+                OutputStream scriptIn = process.getOutputStream();
+                scriptIn.write(request.getBody());
+                BufferedReader scriptOut = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                String line, scriptResponse = "";
+                while((line = scriptOut.readLine()) != null)
+                {
+                    scriptResponse += line;
+                }
+                
+                response.setIsScript();
+                response.setScriptResponse(scriptResponse);
                 
                 response.setCode(200);
                 response.setReasonPhrase("OK");
