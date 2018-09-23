@@ -217,12 +217,12 @@ public class ResponseFactory {
 
         // Caching
         try {
-            if(request.getHeaders().containsKey("If-Modified-Since:"))
+            if(request.getHeaders().containsKey("if-modified-since:"))
             {
-                String sentTime = request.getHeaders().get("If-Modified-Since:").get(0)
-                        + " " + request.getHeaders().get("If-Modified-Since:").get(1)
-                        + " " + request.getHeaders().get("If-Modified-Since:").get(2)
-                        + " " + request.getHeaders().get("If-Modified-Since:").get(3);
+                String sentTime = request.getHeaders().get("if-modified-since:").get(0)
+                        + " " + request.getHeaders().get("if-modified-since:").get(1)
+                        + " " + request.getHeaders().get("if-modified-since::").get(2)
+                        + " " + request.getHeaders().get("if-modified-since:").get(3);
 
                 Date requestDate = new Date();
                 try
