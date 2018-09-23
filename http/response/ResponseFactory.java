@@ -25,7 +25,7 @@ public class ResponseFactory {
 
                 if (request.getHeaders().containsKey("Authorization:")) {
 
-                    String authInfo = request.getHeaders().get("Authorization:").get(0);
+                    String authInfo = request.getHeaders().get("Authorization:").get(1);
 
                     if(!(htpassword.isAuthorized(authInfo))) {
                         Response response = new Response(resource);
@@ -38,6 +38,7 @@ public class ResponseFactory {
                     Response response = new Response(resource);
                     response.setCode(401);
                     response.setReasonPhrase("Unauthorized");
+                    response.addHeader("WWW-Authenticate: " + htaccess.getAuthType() + " realm=" + htaccess.getAuthName());
                     return response;
                 }
             }
@@ -48,6 +49,12 @@ public class ResponseFactory {
         File path = new File(resource.absolutePath());
         if(!path.exists())
         {
+            if(request.getVerb().equals("PUT"))
+            {
+                path = new File(resource.getDirectory());
+                if(path.exists())
+                    return PUTrequest(request, resource);
+            }
             return notFound(resource);
         }
         
@@ -106,8 +113,19 @@ public class ResponseFactory {
     private Response PUTrequest(Request request, Resource resource)
     {
         Response response = new Response(resource);
-        //generate 201 for new file, 200 for replace old file, 204 for replace old file with empty file
-        //body into stdin for server scripts?
+        File path = new File(resource.absolutePath());
+        
+        try
+        {
+            FileOutputStream outStream = new FileOutputStream(path, false);
+            outStream.write(request.getBody());
+            outStream.close();
+        }
+        catch (IOException e)
+        {
+            return error500(resource);
+        }
+        
         response.setCode(201);
         response.setReasonPhrase("Created");
         response.addHeader("Content-Location: " + resource.absolutePath());
@@ -137,7 +155,29 @@ public class ResponseFactory {
     private Response POSTrequest(Request request, Resource resource)
     {
         Response response = new Response(resource);
-        //Send data to server
+        
+            File path;
+        
+        if(resource.isDirectory())
+        {
+            path = new File(resource.getDirectory() + "NewPostFile.txt");
+        }
+        else
+        {
+            path = new File(resource.absolutePath());
+        }
+        
+        try
+        {
+            FileOutputStream outStream = new FileOutputStream(path, true);
+            outStream.write(request.getBody());
+            outStream.close();
+        }
+        catch (IOException e)
+        {
+            return error500(resource);
+        }
+        
         response.setCode(200);
         response.setReasonPhrase("OK");
         
@@ -159,6 +199,7 @@ public class ResponseFactory {
                 return error500(resource);
             }
         }
+
         return response;
     }
     
@@ -209,6 +250,8 @@ public class ResponseFactory {
         String contentType = mtype.lookUp(fileType);
         response.addHeader("Content-Type: " + contentType);
         response.addHeader("Content-Length: " + path.length());
+        response.setContentLength(path.length());
+        response.setContentLengthPresent(true);
         
         response.setCode(200);
         response.setReasonPhrase("OK");

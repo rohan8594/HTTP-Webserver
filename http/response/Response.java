@@ -14,6 +14,8 @@ public class Response {
     private Resource ResponseResource;
     private byte[] Body;
     private ArrayList<String> Headers;
+    private long contentLength;
+    private boolean isContentLengthPresent;
     
     public Response(Resource rsrc)
     {
@@ -46,7 +48,23 @@ public class Response {
     {
         this.ReasonPhrase = reason;
     }
-    
+
+    public void setContentLength(long contentLength) {
+        this.contentLength = contentLength;
+    }
+
+    public boolean isContentLengthPresent() {
+        return isContentLengthPresent;
+    }
+
+    public long getContentLength() {
+        return contentLength;
+    }
+
+    public void setContentLengthPresent(boolean contentLengthPresent) {
+        isContentLengthPresent = contentLengthPresent;
+    }
+
     public void addHeader(String header)
     {
         this.Headers.add(header);
@@ -55,6 +73,10 @@ public class Response {
     public void setBody(byte[] body)
     {
         this.Body = body;
+    }
+
+    public ArrayList<String> getHeaders() {
+        return Headers;
     }
 
     public void sendResponse(Socket client)
