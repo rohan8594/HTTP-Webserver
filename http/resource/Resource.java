@@ -62,7 +62,12 @@ public class Resource {
         if (modifiedUri.charAt(modifiedUri.length() - 1) == '/') {
             this.isDirectory = true;
             this.directoryUri = modifiedUri;
-            modifiedUri = modifiedUri + "index.html";
+          
+            if(config.getDirectoryIndex() != null) {
+                modifiedUri = modifiedUri + config.getDirectoryIndex();
+            } else {
+                modifiedUri = modifiedUri + "index.html";
+            }
         }
         else
         {
