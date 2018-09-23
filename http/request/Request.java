@@ -27,80 +27,67 @@ public class Request {
         String line;
         StringTokenizer tokenizer;
         ArrayList<String> tokens;
-        boolean body = false;
         boolean requestLine = true;
         
         try
         {
             BufferedReader requestReader = new BufferedReader(new InputStreamReader(Client.getInputStream()));
-            
+           
             while(!(line = requestReader.readLine()).equals(""))
             {
-                if (!body)
-                {
-                    tokenizer = new StringTokenizer(line);
-                    tokens = new ArrayList();
+                tokenizer = new StringTokenizer(line);
+                tokens = new ArrayList();
 
-                    while(tokenizer.hasMoreTokens())
+                while(tokenizer.hasMoreTokens())
+                {
+                    tokens.add(tokenizer.nextToken());
+                }
+                if(requestLine)
+                {
+                    this.Verb = tokens.get(0).toUpperCase();
+                    if(tokens.size() < 3)
                     {
-                        tokens.add(tokenizer.nextToken());
-                    }
-                    if(requestLine)
-                    {
-                        this.Verb = tokens.get(0).toUpperCase();
-                        if(tokens.size() < 3)
-                        {
-                            this.Uri = null;
-                            this.httpVersion = tokens.get(1);
-                        }
-                        else
-                        {
-                            String query = "?query=";
-                            if(!tokens.get(1).contains(query))
-                            {
-                                this.Uri = tokens.get(1);
-                            }
-                            else
-                            {
-                                int index = tokens.get(1).indexOf(query);
-                                this.Uri = tokens.get(1).substring(0, index);
-                                this.Query = tokens.get(1).substring(index + query.length());
-                            }
-                            this.httpVersion = tokens.get(2);
-                        }
-                    }
-                    else if(tokens.isEmpty())
-                    {
-                        body = true;
+                        this.Uri = null;
+                        this.httpVersion = tokens.get(1);
                     }
                     else
                     {
-                        ArrayList<String> headerValues = new ArrayList<>();
-                        for(int i = 1; i < tokens.size(); i++)
+                        String query = "?query=";
+                        if(!tokens.get(1).contains(query))
                         {
-                            headerValues.add(tokens.get(i).toLowerCase());
+                            this.Uri = tokens.get(1);
                         }
-                        
-                        this.Headers.put(tokens.get(0).toLowerCase(), headerValues);
+                        else
+                        {
+                            int index = tokens.get(1).indexOf(query);
+                            this.Uri = tokens.get(1).substring(0, index);
+                            this.Query = tokens.get(1).substring(index + query.length());
+                        }
+                        this.httpVersion = tokens.get(2);
                     }
-                    requestLine = false;
                 }
-                else if (body)
+                else
                 {
-                    Body = line.getBytes();
+                    ArrayList<String> headerValues = new ArrayList<>();
+                    for(int i = 1; i < tokens.size(); i++)
+                    {
+                        headerValues.add(tokens.get(i).toLowerCase());
+                    }
+
+                    this.Headers.put(tokens.get(0).toLowerCase(), headerValues);
                 }
+                requestLine = false;
             }
             if(this.Headers.containsKey("content-length:"))
             {
+                int[] bodyArr = new int[Integer.parseInt(Headers.get("content-length:").get(0))];
                 line = "";
                 for(int i = 0; i < Integer.parseInt(Headers.get("content-length:").get(0)); i++)
                 {
-                    line += requestReader.read();
+                    bodyArr[i] = requestReader.read();
+                    line += Character.toString((char)bodyArr[i]);
                 }
-                
-                System.out.println(line);
                 Body = line.getBytes();
-                System.out.println(new String(Body, "UTF-8"));
             }
         }
         catch(IOException e)
