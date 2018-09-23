@@ -23,9 +23,9 @@ public class ResponseFactory {
                 htaccess = new Htaccess(resource);
                 htpassword = new Htpassword(htaccess.getAuthUserFile());
 
-                if (request.getHeaders().containsKey("Authorization:")) {
+                if (request.getHeaders().containsKey("authorization:")) {
 
-                    String authInfo = request.getHeaders().get("Authorization:").get(1);
+                    String authInfo = request.getHeaders().get("authorization:").get(1);
 
                     if(!(htpassword.isAuthorized(authInfo))) {
                         Response response = new Response(resource);
@@ -113,7 +113,8 @@ public class ResponseFactory {
     private Response PUTrequest(Request request, Resource resource)
     {
         Response response = new Response(resource);
-        File path = new File(resource.absolutePath());
+        //File path = new File(resource.absolutePath());
+        File path = new File("public_html" + File.separator + "test.txt");
         
         try
         {
@@ -217,6 +218,7 @@ public class ResponseFactory {
 
         // Caching
         try {
+
             if(request.getHeaders().containsKey("if-modified-since:"))
             {
                 String sentTime = request.getHeaders().get("if-modified-since:").get(0)
@@ -234,7 +236,6 @@ public class ResponseFactory {
                     return error500(resource);
                 }
 
-                long testDate = requestDate.getTime();
                 if(systemDate == requestDate.getTime())
                 {
                     response.setCode(304);
