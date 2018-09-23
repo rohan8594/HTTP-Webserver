@@ -43,8 +43,7 @@ public class Worker extends Thread {
 
             Logger logFile = new Logger(config.getLogFile());
             logFile.write(req, res, client);
-            System.out.println( "-------------------------" );
-            
+
             client.close();
         } catch (IOException e) {
             e.printStackTrace();

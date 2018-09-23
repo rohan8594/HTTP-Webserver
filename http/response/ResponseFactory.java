@@ -215,13 +215,14 @@ public class ResponseFactory {
         Date returnDate = new Date(systemDate);
         response.addHeader("Last-Modified: " + dateFormat.format(returnDate) + " GMT");
 
+        // Caching
         try {
-            if(request.getHeaders().containsKey("Last-Modified:"))
+            if(request.getHeaders().containsKey("If-Modified-Since:"))
             {
-                String sentTime = request.getHeaders().get("Last-Modified:").get(1)
-                        + " " + request.getHeaders().get("Last-Modified:").get(2)
-                        + " " + request.getHeaders().get("Last-Modified:").get(3)
-                        + " " + request.getHeaders().get("Last-Modified:").get(4);
+                String sentTime = request.getHeaders().get("If-Modified-Since:").get(0)
+                        + " " + request.getHeaders().get("If-Modified-Since:").get(1)
+                        + " " + request.getHeaders().get("If-Modified-Since:").get(2)
+                        + " " + request.getHeaders().get("If-Modified-Since:").get(3);
 
                 Date requestDate = new Date();
                 try
@@ -233,7 +234,8 @@ public class ResponseFactory {
                     return error500(resource);
                 }
 
-                if(systemDate < requestDate.getTime())
+                long testDate = requestDate.getTime();
+                if(systemDate == requestDate.getTime())
                 {
                     response.setCode(304);
                     response.setReasonPhrase("Not Modified");
