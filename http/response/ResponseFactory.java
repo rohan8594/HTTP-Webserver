@@ -18,9 +18,6 @@ public class ResponseFactory {
 
     public Response getResponse(Request request, Resource resource)
     {
-        System.out.println(resource.absolutePath());
-        if(true)
-            return PUTrequest(request, resource);
         try {
             if(resource.isProtected()) {
                 htaccess = new Htaccess(resource);
@@ -219,13 +216,15 @@ public class ResponseFactory {
         Date returnDate = new Date(systemDate);
         response.addHeader("Last-Modified: " + dateFormat.format(returnDate) + " GMT");
 
+        // Caching
         try {
-            if(request.getHeaders().containsKey("last-modified:"))
+
+            if(request.getHeaders().containsKey("if-modified-since:"))
             {
-                String sentTime = request.getHeaders().get("last-modified:").get(1)
-                        + " " + request.getHeaders().get("last-modified:").get(2)
-                        + " " + request.getHeaders().get("last-modified:").get(3)
-                        + " " + request.getHeaders().get("last-modified:").get(4);
+                String sentTime = request.getHeaders().get("if-modified-since:").get(0)
+                        + " " + request.getHeaders().get("if-modified-since:").get(1)
+                        + " " + request.getHeaders().get("if-modified-since::").get(2)
+                        + " " + request.getHeaders().get("if-modified-since:").get(3);
 
                 Date requestDate = new Date();
                 try
@@ -237,7 +236,7 @@ public class ResponseFactory {
                     return error500(resource);
                 }
 
-                if(systemDate < requestDate.getTime())
+                if(systemDate == requestDate.getTime())
                 {
                     response.setCode(304);
                     response.setReasonPhrase("Not Modified");
@@ -254,6 +253,8 @@ public class ResponseFactory {
         String contentType = mtype.lookUp(fileType);
         response.addHeader("Content-Type: " + contentType);
         response.addHeader("Content-Length: " + path.length());
+        response.setContentLength(path.length());
+        response.setContentLengthPresent(true);
         
         response.setCode(200);
         response.setReasonPhrase("OK");
