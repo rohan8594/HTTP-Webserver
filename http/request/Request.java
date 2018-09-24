@@ -74,7 +74,7 @@ public class Request {
                     ArrayList<String> headerValues = new ArrayList<>();
                     for(int i = 1; i < tokens.size(); i++)
                     {
-                        headerValues.add(tokens.get(i).toLowerCase());
+                        headerValues.add(tokens.get(i));
                     }
 
                     this.Headers.put(tokens.get(0).toLowerCase(), headerValues);

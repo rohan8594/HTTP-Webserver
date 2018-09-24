@@ -110,9 +110,24 @@ public class ResponseFactory {
 
                 Process process = processBuilder.start();
                 OutputStream scriptIn = process.getOutputStream();
-                scriptIn.write(request.getBody());
+
+                if (request.getBody() != null) {
+                    scriptIn.write(request.getBody());
+                }
+
                 BufferedReader scriptOut = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                String line, scriptResponse = "";
+                String line, scriptResponse = "", scriptHeader = "";
+                while((line = scriptOut.readLine()) != null)
+                {
+                    if (line.equals("")) {
+                        scriptResponse += "\r\n";
+                        break;
+                    }
+
+                    scriptHeader += line;
+                    response.addHeader(scriptHeader);
+                }
+
                 while((line = scriptOut.readLine()) != null)
                 {
                     scriptResponse += line;
@@ -141,7 +156,7 @@ public class ResponseFactory {
         for(String key : map.keySet())
         {
             String headerArgs = "";
-            for(int i = 0; i > map.get(key).size(); i++)
+            for(int i = 0; i < map.get(key).size(); i++)
             {
                 headerArgs += " " + map.get(key).get(i).toUpperCase();
             }
@@ -155,7 +170,7 @@ public class ResponseFactory {
 
         String line = reader.readLine();
         String[] scriptPath = line.split(" ");
-        String path = scriptPath[0].replace("!#", "");
+        String path = scriptPath[0].replace("#!", "");
 
         args.add(path);
         args.add(scriptPath[1]);

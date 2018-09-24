@@ -102,32 +102,26 @@ public class Response {
             OutputStream output = client.getOutputStream();
 
             responseStr.append("HTTP/1.1 ").append(ResponseCode).append(" ").append(ReasonPhrase).append("\r\n");
-            
+
+            for(int i = 0; i < Headers.size(); i ++)
+            {
+                responseStr.append(Headers.get(i)).append("\r\n");
+            }
+
             if(this.isScript)
             {
-                responseStr.append(Headers.get(0)).append("\r\n");
-                responseStr.append(Headers.get(1));
                 responseStr.append(this.scriptResponse);
-                
-                byte[] responseBytes = responseStr.toString().getBytes();
-                output.write(responseBytes);
             }
-            else
+
+            byte[] responseBytes = responseStr.toString().getBytes();
+            output.write(responseBytes);
+
+            if(Body != null)
             {
-                for(int i = 0; i < Headers.size(); i ++)
-                {
-                    responseStr.append(Headers.get(i)).append("\r\n");
-                }
-
-                byte[] responseBytes = responseStr.toString().getBytes();
-                output.write(responseBytes);
-
-                if(Body != null)
-                {
-                    output.write("\r\n".getBytes());
-                    output.write(Body);
-                }
+                output.write("\r\n".getBytes());
+                output.write(Body);
             }
+
             output.close();
 
         }
