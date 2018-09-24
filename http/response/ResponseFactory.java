@@ -79,10 +79,19 @@ public class ResponseFactory {
             case "HEAD":
                 return HEADrequest(request, resource);
             default:
-                return error500(resource);
+                return error400(resource);
         }
     }
-    
+
+    private Response error400(Resource resource) {
+
+        Response response = new Response(resource);
+        response.setCode(400);
+        response.setReasonPhrase("Bad Request");
+
+        return response;
+    }
+
     private Response notFound(Resource resource)
     {
         Response response = new Response(resource);

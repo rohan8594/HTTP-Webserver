@@ -95,7 +95,7 @@ public class Request {
         }
         catch(IOException e)
         {
-            System.out.println("Error reading parsing request (500):   " + e);
+            this.Verb = "Error 400";
         } 
     }
     
