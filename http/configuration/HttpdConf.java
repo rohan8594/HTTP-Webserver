@@ -20,7 +20,7 @@ public class HttpdConf {
     private String serverRoot;
     private String docRoot;
     private String logFile;
-    private String accessFile;
+    private String accessFile = ".htaccess";
     private String directoryIndex;
     private HashMap<String, String> scriptAlias = new HashMap<>();
     private HashMap<String, String> alias = new HashMap<>();

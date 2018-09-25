@@ -11,10 +11,18 @@ public class WebServer {
 
     public static void start() throws IOException {
 
+        int listenPort;
         HttpdConf config = new HttpdConf(CONFIG_PATH);
         MimeTypes mimes = new MimeTypes(MIME_TYPES_PATH);
-        ServerSocket socket = new ServerSocket(config.getPort());
-        System.out.println("Listening at port " + config.getPort());
+
+        if (config.getPort() != 0) {
+            listenPort = config.getPort();
+        } else {
+            listenPort = 8080;
+        }
+
+        ServerSocket socket = new ServerSocket(listenPort);
+        System.out.println("Listening at port " + listenPort);
 
         while (true) {
             Socket client = socket.accept();
