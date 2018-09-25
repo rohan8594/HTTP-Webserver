@@ -1,8 +1,6 @@
 package http.configuration;
 
 import http.resource.*;
-
-import java.net.*;
 import java.io.*;
 
 public class Htaccess {
@@ -11,7 +9,6 @@ public class Htaccess {
     private String authType;
     private String authName;
     private String require;
-    private Htpassword htpwd;
 
     public Htaccess(Resource resource) throws IOException {
         String directoryPath = new File(resource.absolutePath()).getParent();

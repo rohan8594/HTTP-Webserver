@@ -11,7 +11,7 @@ import java.util.*;
 public class Logger {
     private String fileName;
 
-    public Logger(String fileName) throws IOException {
+    public Logger(String fileName) {
         this.fileName = fileName;
     }
 
@@ -30,14 +30,13 @@ public class Logger {
         int statusCode = response.getCode();
         String bytesReturned = "-";
 
-        if (response.getHeaders() != null && response.isContentLengthPresent() == true) {
+        if (response.getHeaders() != null && response.isContentLengthPresent()) {
             bytesReturned = Long.toString(response.getContentLength());
         }
 
         String outputStr = String.format("%s - %s [%s] \"%s\" %d %s\n", clientIPAddr, clientName, date, requestLine,
                 statusCode, bytesReturned);
 
-        //System.out.println(outputStr);
         FileWriter writer = new FileWriter(logFile.getAbsoluteFile(),true);
         BufferedWriter buffWriter = new BufferedWriter(writer);
         buffWriter.write(outputStr);

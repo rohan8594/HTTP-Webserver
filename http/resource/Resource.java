@@ -1,27 +1,18 @@
 package http.resource;
 
 import http.configuration.*;
-import http.request.Request;
-
-import java.net.*;
 import java.io.*;
 import java.util.*;
-//import java.util.regex.Matcher;
 
 public class Resource {
 
     private String uri;
     private String modifiedUri;
-    private String trueAlias;
-    private String trueScriptAlias;
     private boolean isScript;
     private HttpdConf config;
-    private Set<String> arrOfAliases;
-    private Set<String> arrOfScriptAliases;
     private boolean htaccessExists;
     private boolean isDirectory;
     private String directoryUri;
-    //private Htaccess htaccess;
 
     public Resource(String uri, HttpdConf config) {
         this.uri = uri;
@@ -30,26 +21,14 @@ public class Resource {
     }
 
     private void generateAbsolutePath() {
+        Set<String> arrOfAliases;
+        Set<String> arrOfScriptAliases;
+
         modifiedUri = uri;
         arrOfAliases = config.getAlias().keySet();
         arrOfScriptAliases = config.getScriptAlias().keySet();
 
-        for (String currentAlias : arrOfAliases) {
-            if (uri.contains(currentAlias)) {
-                trueAlias = config.getAlias().get(currentAlias);
-                modifiedUri = uri.replace(currentAlias, trueAlias);
-                break;
-            }
-        }
-
-        for (String currentScriptAlias : arrOfScriptAliases) {
-            if (uri.contains(currentScriptAlias)) {
-                trueScriptAlias = config.getScriptAlias().get(currentScriptAlias);
-                modifiedUri = uri.replace(currentScriptAlias, trueScriptAlias);
-                isScript = true;
-                break;
-            }
-        }
+        getTrueAliases(arrOfAliases, arrOfScriptAliases);
 
         if (!(modifiedUri.contains(config.getDocRoot())) && (modifiedUri.charAt(0) == '/')) {
             modifiedUri = modifiedUri.replaceFirst("/","");
@@ -74,10 +53,28 @@ public class Resource {
             this.isDirectory = false;
             this.directoryUri = modifiedUri.substring(0, modifiedUri.lastIndexOf("/"));
         }
-        
-        //modifiedUri = "public_html\\Test1.txt";
-        //modifiedUri = "public_html/index.html";
-        //modifiedUri = modifiedUri.replace("/", Matcher.quoteReplacement(File.separator));
+
+    }
+
+    private void getTrueAliases(Set<String> arrOfAliases, Set<String> arrOfScriptAliases) {
+        String trueAlias;
+        String trueScriptAlias;
+        for (String currentAlias : arrOfAliases) {
+            if (uri.contains(currentAlias)) {
+                trueAlias = config.getAlias().get(currentAlias);
+                modifiedUri = uri.replace(currentAlias, trueAlias);
+                break;
+            }
+        }
+
+        for (String currentScriptAlias : arrOfScriptAliases) {
+            if (uri.contains(currentScriptAlias)) {
+                trueScriptAlias = config.getScriptAlias().get(currentScriptAlias);
+                modifiedUri = uri.replace(currentScriptAlias, trueScriptAlias);
+                isScript = true;
+                break;
+            }
+        }
     }
 
     public String absolutePath() {
@@ -88,7 +85,7 @@ public class Resource {
         return isScript;
     }
 
-    public boolean isProtected() throws IOException {
+    public boolean isProtected() {
         String directoryPath = new File(modifiedUri).getParent();
         directoryPath = directoryPath + "/";
 
@@ -98,12 +95,7 @@ public class Resource {
             e.getMessage();
         }
 
-        if (htaccessExists) {
-            //htaccess = new Htaccess();
-            return true;
-        } else {
-            return false;
-        }
+        return htaccessExists;
     }
 
     public HttpdConf getConfig() {

@@ -14,8 +14,6 @@ public class Worker extends Thread {
     private Socket client;
     private HttpdConf config;
     private MimeTypes mimes;
-    private Htaccess htaccess;
-    private Htpassword htpassword;
 
     public Worker(Socket client, HttpdConf config, MimeTypes mimes) {
         this.client = client;

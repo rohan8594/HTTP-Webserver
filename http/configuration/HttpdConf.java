@@ -7,25 +7,25 @@ import java.util.HashMap;
 
 public class HttpdConf {
 
-    public static final String SERVER_ROOT = "ServerRoot";
-    public static final String DOCUMENT_ROOT = "DocumentRoot";
-    public static final String PORT = "Listen";
-    public static final String LOG_FILE = "LogFile";
-    public static final String SCRIPT_ALIAS = "ScriptAlias";
-    public static final String ALIAS = "Alias";
-    public static final String ACCESS_FILE_NAME = "AccessFileName";
-    public static final String DIRECTORY_INDEX = "DirectoryIndex";
+    private static final String SERVER_ROOT = "ServerRoot";
+    private static final String DOCUMENT_ROOT = "DocumentRoot";
+    private static final String PORT = "Listen";
+    private static final String LOG_FILE = "LogFile";
+    private static final String SCRIPT_ALIAS = "ScriptAlias";
+    private static final String ALIAS = "Alias";
+    private static final String ACCESS_FILE_NAME = "AccessFileName";
+    private static final String DIRECTORY_INDEX = "DirectoryIndex";
 
-    int port;
-    String serverRoot;
-    String docRoot;
-    String logFile;
-    String accessFile;
-    String directoryIndex;
-    HashMap<String, String> scriptAlias = new HashMap<>();
-    HashMap<String, String> alias = new HashMap<>();
+    private int port;
+    private String serverRoot;
+    private String docRoot;
+    private String logFile;
+    private String accessFile;
+    private String directoryIndex;
+    private HashMap<String, String> scriptAlias = new HashMap<>();
+    private HashMap<String, String> alias = new HashMap<>();
 
-    String fileName;
+    private String fileName;
 
     public HttpdConf(String fileName) {
         this.fileName = fileName;

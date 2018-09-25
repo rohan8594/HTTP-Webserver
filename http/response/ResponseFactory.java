@@ -300,10 +300,10 @@ public class ResponseFactory {
             {
                 String sentTime = request.getHeaders().get("if-modified-since:").get(0)
                         + " " + request.getHeaders().get("if-modified-since:").get(1)
-                        + " " + request.getHeaders().get("if-modified-since::").get(2)
+                        + " " + request.getHeaders().get("if-modified-since:").get(2)
                         + " " + request.getHeaders().get("if-modified-since:").get(3);
 
-                Date requestDate = new Date();
+                Date requestDate;
                 try
                 {
                     requestDate = dateFormat.parse(sentTime);
