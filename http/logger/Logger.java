@@ -19,6 +19,7 @@ public class Logger {
         File logFile = new File(fileName);
 
         if (!logFile.exists()) {
+            logFile.getParentFile().mkdirs();
             logFile.createNewFile();
         }
 
