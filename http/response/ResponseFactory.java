@@ -167,7 +167,7 @@ public class ResponseFactory {
             String headerArgs = "";
             for(int i = 0; i < map.get(key).size(); i++)
             {
-                headerArgs += " " + map.get(key).get(i).toUpperCase();
+                headerArgs += " " + map.get(key).get(i);
             }
             processBuilder.environment().put("HTTP_" + key.toUpperCase(), headerArgs);
         }
