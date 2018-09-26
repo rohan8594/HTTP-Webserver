@@ -53,7 +53,7 @@ public class Request {
                     }
                     else
                     {
-                        String query = "?query=";
+                        String query = "?";
                         if(!tokens.get(1).contains(query))
                         {
                             this.Uri = tokens.get(1);

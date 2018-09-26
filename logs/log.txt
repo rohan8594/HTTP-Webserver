@@ -229,3 +229,5 @@
 0:0:0:0:0:0:0:1 - localhost [25/9/2018:19:13:25 -0700] "GET /images/sushi.jpg HTTP/1.1" 200 40183
 0:0:0:0:0:0:0:1 - localhost [25/9/2018:19:13:25 -0700] "GET /js/image-test.js HTTP/1.1" 200 678
 0:0:0:0:0:0:0:1 - localhost [25/9/2018:19:13:31 -0700] "GET /cgi-bin/perl_env HTTP/1.1" 200 -
+0:0:0:0:0:0:0:1 - localhost [25/9/2018:19:46:46 -0700] "POST /cgi-bin/perl_env HTTP/1.1" 200 -
+0:0:0:0:0:0:0:1 - localhost [25/9/2018:19:53:38 -0700] "POST /cgi-bin/perl_env HTTP/1.1" 200 -
