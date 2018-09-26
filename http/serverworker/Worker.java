@@ -26,13 +26,6 @@ public class Worker extends Thread {
         try {
             Request req = new Request(client);
 
-            System.out.println( "-------------------------" );
-            System.out.println("Method: " + req.getVerb());
-            System.out.println("Uri: " + req.getUri());
-            System.out.println("HTTP Version: " + req.getHttpVersion());
-            System.out.println("Header: " + req.getHeaders());
-            System.out.println( "-------------------------" );
-
             Resource resrc = new Resource(req.getUri(), config);
 
             ResponseFactory resFac = new ResponseFactory(mimes);

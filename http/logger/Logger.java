@@ -41,6 +41,7 @@ public class Logger {
         FileWriter writer = new FileWriter(logFile.getAbsoluteFile(),true);
         BufferedWriter buffWriter = new BufferedWriter(writer);
         buffWriter.write(outputStr);
+        System.out.println(outputStr);
 
         buffWriter.close();
 
