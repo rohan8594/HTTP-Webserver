@@ -18,6 +18,8 @@ The goal of this project is to design and develop a multi-threaded web server ca
 From your terminal:
 
 ```
+$ git clone https://github.com/rohan8594/HTTP-Webserver.git
+$ cd HTTP-Webserver
 $ javac WebServer.java
 $ java WebServer
 ```
